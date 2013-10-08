@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html lang="en">
+
+  <head>
+    <meta charset="utf-8">
+    <title>
+      Magic Mystery Forum Demo
+    </title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="">
+    <meta name="author" content="">
+    <script src='https://cdn.firebase.com/v0/firebase.js'></script>
+<!--     <script type='text/javascript' src='https://cdn.firebase.com/v0/firebase-simple-login.js'> </script> -->
+    <link href="https://netdna.bootstrapcdn.com/bootstrap/3.0.0-rc2/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://netdna.bootstrapcdn.com/bootstrap/3.0.0-rc2/css/bootstrap-glyphicons.css" rel="stylesheet">
+    <link href="http://forum.ralsina.me/static/jPages.css" rel="stylesheet">
+  </head>
+  <body>
+  <script>
+  var disqus_shortname = 'magicmisteryforum'; // required: replace example with your forum shortname
+  var myRef = new Firebase('https://magicforum.firebaseIO.com');
+  function createThread() {
+    var title = $('#titleInput').val();
+    myRef.push({title:title});
+  };
+
+  var dsq = null;
+
+  function openThread(id, title) {
+    container = $('#thread_container')
+    $('<div/>').html('<div id="disqus_thread"></div><sc' +
+    'ript type="text/javascript"> var disqus_shortname = "'+disqus_shortname+'";'+
+    'var disqus_identifier = "'+id+'";'+
+    'var disqus_title = "'+title+'";'+
+    'var disqus_url = "'+id+'";'+
+    '(function() { var dsq = document.createElement("script");'+
+    'dsq.type = "text/javascript"; dsq.async = true;'+
+    'dsq.src = "http://" + disqus_shortname + ".disqus.com/embed.js";'+
+    '(document.getElementsByTagName("head")[0] || document.getElementsByTagName("body")[0]).appendChild(dsq); })(); </s'+'cript><noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript><a href="http://disqus.com" class="dsq-brlink">comments powered by <span class="logo-disqus">Disqus</span></a>').appendTo(container);
+  }
+
+  myRef.on('child_added', function(snapshot) {
+    snapshot.forEach(function(thread) {
+        disqus_id = thread.ref().toString();
+        title = thread.val()
+    })
+    // Add an item to the thread list (on top)
+    item = $('<li>').addClass('list-group-item')
+    link = $('<a>')
+        .attr('href', 'javascript:openThread("'+disqus_id+'", "'+title+'")')
+        .attr('id', disqus_id).text(title + ' -- ')
+    item.append(link);
+
+    if (document.baseURI.substring(0,4) == 'data' or document.baseURI.substring(0,4) == 'file') {
+        nolink = $('<span>').text('Sorry, no comment counts in really-magical-mode')
+        item.append(nolink)
+    } else {
+        link = $('<a>')
+            .attr('href', 'javascript:openThread("'+disqus_id+'", "'+title+'")')
+            .attr('data-disqus-identifier', disqus_id)
+            .text('Comments')
+        item.append(link);
+        // Refresh comment count
+        // Am I creating more than one of these? Likely. FIXME
+        (function() {
+        var s = document.createElement('script');
+        s.async = true;
+        s.type = 'text/javascript';
+        s.src = 'http://' + disqus_shortname + '.disqus.com/count.js';
+        (document.getElementsByTagName('HEAD')[0] || document.getElementsByTagName('BODY')[0]).appendChild(s);
+        }());
+    }
+    $('#itemContainer').prepend(item)
+
+    // Repaginate list of threads
+    $("div.holder").jPages({
+        containerID : "itemContainer",
+        perPage: 5
+    });
+
+ });
+
+  </script>
+    <div class="container">
+      <div class="page-header">
+        <h3 class="text-center">
+          Magic Mystery Forum Demo
+        </h3>
+      </div>
+      <div class="row">
+      <div id="thread_container">
+      </div>
+      </div>
+      <div class="row">
+        <div id="thread_creation">
+            <div class="form-group">
+            <input type="text" class="form-control" placeholder="New Thread Title" id="titleInput">
+            </div>
+            <button type="submit" onClick="createThread()" class="btn btn-default"> Create! </button>
+        </div>
+          <hr>
+          <ul class="list-group" id="itemContainer">
+          </ul>
+          <div class="holder"></div>
+          </div>
+        <div class="col-md-4" style="display: none;">
+          <h3>
+            Span 4
+          </h3>
+          <p>
+            Content
+          </p>
+        </div>
+    </div>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.7.2/jquery.min.js" >
+    </script>
+    <script src="http://forum.ralsina.me/static/jPages.min.js"></script>
+    <script src="https://netdna.bootstrapcdn.com/bootstrap/3.0.0-rc2/js/bootstrap.min.js" >
+    </script>
+    <div style="text-align: center;">
+    <iframe width="560" height="315" src="//www.youtube.com/embed/3lvThaowkPk" frameborder="0" allowfullscreen></iframe>
+    </div>
+      <div>
+        <center>
+          (c) Roberto Alsina --
+          <a href="http://magicforum.googlecode.com">http://magicforum.googlecode.com</a>
+        </center>
+      </div>
+    </div>
+  </body>
+  <script type="text/javascript">
+  </script>
+</html>
+
