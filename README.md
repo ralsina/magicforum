@@ -9,6 +9,10 @@ a [Disqus](http://disqus.com) forum, replace mine with yours, and put it somewhe
 
 For bonus cool points, drop the file into [dataurl](http://dataurl.net/#dataurlmaker) and you will
 get a huge URL which you can then pass to [tinyurl](http://tinyurl.com) and end up with a forum
-that has no hosting (at least none you pay for).
+that has no hosting (at least none you pay for) like http://tinyurl.com/reallyreallymagicalforum
 
 The only problem with that approach is that comment counts on threads will not work.
+
+----
+
+Uses bootstrap, JQuery, Frebase, Disqus and jPages (http://luis-almeida.github.io/jPages/)
